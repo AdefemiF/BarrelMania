@@ -1,0 +1,67 @@
+{
+	"name": "aerogameframework",
+	"servePort": 8000,
+	"tree": {
+		"$className": "DataModel",
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+			"StarterPlayerScripts": {
+				"$ignoreUnknownInstances": true,
+				"Aero": {
+					"$ignoreUnknownInstances": true,
+					"Controllers": {
+						"$path": "src/Client/Controllers"
+					},
+					"Modules": {
+						"$path": "src/Client/Modules"
+					},
+					"Internal": {
+						"$path": "src/_framework/client_internal"
+					}
+				}
+			}
+		},
+		"ServerStorage": {
+			"$className": "ServerStorage",
+			"Aero": {
+				"$ignoreUnknownInstances": true,
+				"Modules": {
+					"$path": "src/Server/Modules"
+				},
+				"Models": {
+					"$path": "src/Server/Models"
+				},
+				"Services": {
+					"$path": "src/Server/Services"
+				}
+			}
+		},
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Aero": {
+				"$ignoreUnknownInstances": true,
+				"Shared": {
+					"$path": "src/Shared"
+				},
+				"Internal": {
+					"$path": "src/_framework/rep_internal"
+				}
+			}
+		},
+		"ReplicatedFirst": {
+			"$className": "ReplicatedFirst",
+			"Aero": {
+				"$path": "src/_framework/rep_first"
+			}
+		},
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"Aero": {
+				"$ignoreUnknownInstances": true,
+				"Internal": {
+					"$path": "src/_framework/server_internal"
+				}
+			}
+		}
+	}
+}

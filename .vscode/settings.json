@@ -1,0 +1,15 @@
+{
+    "maven.view": "hierarchical",
+    "rojo.enableTelemetry": false,
+    "rojo.releaseBranch": "0.4.x",
+    "rojo.pluginManagement": false,
+    "Lua.diagnostics.globals": [
+        "ColorSequenceKeypoint"
+    ],
+    "Lua.diagnostics.disable": [
+        "undefined-global",
+        "unknown-symbol",
+        "undefined-rbx-member",
+        "redefined-local"
+    ]
+}
