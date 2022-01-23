@@ -1,5 +1,7 @@
 # BarrelMania
-Fast Paced Multiplayer Game on Roblox Platform! Currently has 3 gamemodes and relies on Roblox APis for server/client communication. Project will now be updated periodically. 
+Fast Paced Multiplayer Game on Roblox Platform! Currently has 3 gamemodes and relies on Roblox APis for server/client communication. Project will probably not be updated as frequently due to other new projects taking up our time! 
+
+Uses [AeroGameFramework](https://sleitnick.github.io/AeroGameFramework/) for majority of game structure! 
 
 https://user-images.githubusercontent.com/35737062/147372959-bd891209-411c-4925-8471-4ec8ea037b0b.mp4
 
