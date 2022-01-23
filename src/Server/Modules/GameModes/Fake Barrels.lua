@@ -19,7 +19,8 @@ local FakeBarrels = {
     TIMER = nil,
     MapName = nil,
     Humans = {},
-    PlayerData = {};
+	PlayerData = {};
+	Winners = {},
     NumofCompleted = 0;
     WalkSpeed = 20;
     CorrectPoint = 15;
@@ -27,7 +28,11 @@ local FakeBarrels = {
 }
 
 
-
+local function findHumanoid(p)
+	local m = p:FindFirstAncestorOfClass("Model")
+	if m then return m:FindFirstChildOfClass("Humanoid") end
+	return nil
+end
 
 
 function FakeBarrels:CreateTeams()
@@ -63,7 +68,7 @@ end
 
 
 function FakeBarrels:AddStats(plr,points)
-    print(plr,points)
+    --print(plr,points)
     for i, v in pairs(FakeBarrels.PlayerData) do
         if v.Name == plr then
             FakeBarrels.PlayerData[i].POINTS +=points
@@ -131,7 +136,8 @@ function FakeBarrels:PlayerSuccess(plr)
         if plr == v.Name then
             v.Completed = true
             FakeBarrels.NumofCompleted+=1
-            v.POINTS += (FakeBarrels.CompletedPoints/2)
+			v.POINTS += (FakeBarrels.CompletedPoints/2)
+			FakeBarrels.Winners[v.Name] = true
         end
     end
 end
@@ -141,12 +147,13 @@ function FakeBarrels:Reset()
     FakeBarrels.TIMER = FakeBarrels.DEFAULT_TIME
     FakeBarrels.Humans = {}
     Framework:GAME_EVENT("UI", "SPECTATE", {})
-    FakeBarrels.NumofCompleted=0
+	FakeBarrels.NumofCompleted=0
+	FakeBarrels.Winners = {}
 end
 
 function FakeBarrels:CanRoundEnd(timer)
-    if timer<=0 or #FakeBarrels.Humans<=0 or FakeBarrels.NumofCompleted>=#FakeBarrels.Humans then
-        Framework:PlayerActions(false)
+    if timer<=0 or #FakeBarrels.Humans<=0 or FakeBarrels.NumofCompleted>=#FakeBarrels.Humans then		
+		Framework:PlayerActions(false)
         FakeBarrels:CalculateXP();
         return true, Framework:GAME_EVENT("UI", "RESULTS", "Nice", FakeBarrels.PlayerData)
     else
@@ -240,10 +247,13 @@ function FakeBarrels:SpawnBarrelGrid()
         for i,v in pairs (Framework:ReturnInfo("Map").Buildings.FakeBarrels:GetChildren()) do
             if v.Name ~= "0000" then
                 local connect
-                connect = v.original.body.Touched:connect(function(part)
-                    if part and part.Parent:FindFirstChild("Humanoid") then
-                        part.Parent.Humanoid.Health =0
-                    end;
+				connect = v.original.body.Touched:connect(function(part)
+					if part and findHumanoid(part) then
+						if findHumanoid(part).Health <= 0 then return end
+                        findHumanoid(part).Health =0
+					end;
+					
+					connect:Disconnect()
                     v.original.body.Anchored = false
                     FakeBarrels.AddStats(part.Parent.Name, 5)
 
@@ -255,12 +265,14 @@ function FakeBarrels:SpawnBarrelGrid()
                     local sound =Framework:ReturnInfo("Map").wrong:Clone()
                     sound.Parent = v
                     sound:Play()
-                    connect:Disconnect()
+                    
                 end)
             else
                 local connect 
-                    connect = v.original.body.Touched:connect(function(part)
-                    if part and part.Parent:FindFirstChild("Humanoid") then
+					connect = v.original.body.Touched:connect(function(part)
+					if part and findHumanoid(part) then
+						if findHumanoid(part).Health <= 0 then return end
+						connect:Disconnect()
                         local plr = game.Players:GetPlayerFromCharacter(part.Parent)
                         Framework:CustomUIForPlayer(plr, "UI", "NICE", FakeBarrels.CorrectPoint)
                         FakeBarrels:AddStats(plr.Name, FakeBarrels.CorrectPoint)
@@ -271,7 +283,7 @@ function FakeBarrels:SpawnBarrelGrid()
                         local sound = Framework:ReturnInfo("Map").correct:Clone()
                         sound.Parent = v
                         sound:Play()
-                        connect:Disconnect()
+                        
                     end
                 end)
                 
@@ -331,18 +343,20 @@ function FakeBarrels:HandleWins()
     local complete = Framework:ReturnInfo("Map").Goal
     local debounce = false
 
-    complete.Touched:connect(function(part)
-            if part and part.Parent:FindFirstChild("Humanoid") and not debounce then
-                debounce = true
-                FakeBarrels:PlayerSuccess(part.Parent.Name)
+	complete.Touched:connect(function(part) 
+		spawn(function()
+            if part and findHumanoid(part) and not debounce then
+				debounce = true
+				local m = findHumanoid(part).Parent
+				local plr = game.Players:GetPlayerFromCharacter(m)
+				if FakeBarrels.Winners[plr.Name] then debounce = false return end
+                FakeBarrels:PlayerSuccess(m.Name)
                 local spawns = Framework:ReturnInfo("Map").CompleteSpawn:GetChildren()
-                part.Parent.UpperTorso.CFrame = spawns[math.random(1, #spawns)].CFrame * CFrame.new(0, 2, 0)
-                local plr = game.Players:GetPlayerFromCharacter(part.Parent)
+                m.UpperTorso.CFrame = spawns[math.random(1, #spawns)].CFrame * CFrame.new(0, 2, 0)
                 Framework:CustomUIForPlayer(plr, "UI", "NICE", FakeBarrels.CorrectPoint)
-                wait(.1)
                 debounce = false
             end
-        
+        end)
         
     end)
 
