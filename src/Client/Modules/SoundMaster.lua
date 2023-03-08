@@ -45,7 +45,6 @@ local MusicType = {
         {Song= "Roblox - Christmas Tree" ; ID = 1846045463;}; 
 	};
 	LobbyMusic       = {
-        
         {Song= "Wishing you a Merry Christmas!" ; ID = 6017632918;};
         {Song= "Roblox - Christmas in the Sun" ; ID = 1837344678;};
         {Song= "Roblox - Christmas Pressies" ; ID = 1841239693;};
@@ -55,12 +54,6 @@ local MusicType = {
         {Song= "Roblox - A Christmas Fairy" ; ID = 1846821427;};
         {Song= "Roblox - Christmas Day" ; ID = 1835968574;};
 		{Song= "Roblox - Santa's World" ; ID = 1845178875;};
-
-
-        
-
-
-		
 	};
 	ShopMusic        = {   
 		{Song="Roblox - Alone at Christmas";  ID = 1841664207};
